@@ -1,6 +1,6 @@
 # frozen_string_literal: false
 begin
-  require "readline"
+  require "readline.so"
 =begin
   class << Readline::HISTORY
     def []=(index, str)

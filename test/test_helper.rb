@@ -1,8 +1,8 @@
 $LOAD_PATH.unshift File.expand_path("../../lib", __FILE__)
-require "readline"
+require "readline.so"
 require "test-unit"
 
-require_relative "envutil"
+require_relative "lib/envutil"
 
 module Test
   module Unit
@@ -48,6 +48,10 @@ module Test
         assert(!status.signaled?, desc)
         message ||= "ruby exit status is not success:"
         assert(status.success?, desc)
+      end
+
+      def skip(message=nil)
+        omit(message)
       end
     end
   end

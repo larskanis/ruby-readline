@@ -1,6 +1,6 @@
 # frozen_string_literal: false
 begin
-  require "readline"
+  require "readline.so"
 rescue LoadError
 else
   require "test/unit"
@@ -614,11 +614,5 @@ class TestReadline < Test::Unit::TestCase
 
   def assert_under_utf8
     return false if ENV['LC_ALL'] == 'UTF-8'
-    loc = caller_locations(1, 1)[0].base_label.to_s
-    assert_separately([{"LC_ALL"=>"UTF-8"}, "-r", __FILE__], <<SRC)
-#skip "test \#{ENV['LC_ALL']}"
-#{self.class.name}.new(#{loc.dump}).run(Test::Unit::Runner.new)
-SRC
-    return true
   end
 end if defined?(::Readline)
