@@ -460,7 +460,7 @@ class TestReadline < Test::Unit::TestCase
     bug6232 = '[ruby-core:43957] [Bug #6232] refresh_line after set_screen_size'
     with_temp_stdio do |stdin, stdout|
       replace_stdio(stdin.path, stdout.path) do
-        assert_ruby_status(%w[-rreadline -], <<-'end;', bug6232)
+        assert_ruby_status(%w[-Ilib -rreadline.so -], <<-'end;', bug6232)
           Readline.set_screen_size(40, 80)
           Readline.refresh_line
         end;
