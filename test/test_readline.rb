@@ -582,11 +582,9 @@ class TestReadline < Test::Unit::TestCase
   end
 
   def with_temp_stdio
-    Tempfile.create("test_readline_stdin") {|stdin|
-      Tempfile.create("test_readline_stdout") {|stdout|
-        yield stdin, stdout
-      }
-    }
+    stdin =  Tempfile.new("test_readline_stdin")
+    stdout = Tempfile.new("test_readline_stdout")
+    yield stdin, stdout
   end
 
   def with_pipe
