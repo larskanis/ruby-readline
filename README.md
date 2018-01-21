@@ -1,3 +1,7 @@
+[![Build Status](https://travis-ci.org/larskanis/ruby-readline.svg?branch=master)](https://travis-ci.org/larskanis/ruby-readline)
+[![Build status](https://ci.appveyor.com/api/projects/status/9jwq2oxj4cjiiko5/branch/master?svg=true)](https://ci.appveyor.com/project/larskanis/ruby-readline/branch/master)
+
+
 # Ruby interface for GNU Readline and Edit Line
 
 This code is extracted from ruby-trunk (on 2018-01-20) an made available as a separate gem.
