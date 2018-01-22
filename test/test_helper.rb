@@ -1,5 +1,5 @@
 $LOAD_PATH.unshift File.expand_path("../../lib", __FILE__)
-require "readline.so"
+require "readline"
 require "test-unit"
 
 require_relative "lib/envutil"

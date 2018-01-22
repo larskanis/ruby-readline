@@ -1,5 +1,5 @@
 # frozen_string_literal: false
-require "readline.so"
+require "readline"
 
 class TestReadlineGem < Test::Unit::TestCase
   def test_gem_extension_loaded
