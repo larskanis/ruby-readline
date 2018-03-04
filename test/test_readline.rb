@@ -613,4 +613,12 @@ class TestReadline < Test::Unit::TestCase
   def assert_under_utf8
     return false if ENV['LC_ALL'] == 'UTF-8'
   end
+
+  def readline_encoding
+    if /mswin|bccwin|mingw/ !~ RUBY_PLATFORM
+      'UTF-8'
+    else
+      'locale'
+    end
+  end
 end if defined?(::Readline)

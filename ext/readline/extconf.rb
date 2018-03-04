@@ -63,6 +63,7 @@ else
   end
 end
 
+readline.have_func("rl_utf8_api")
 readline.have_func("rl_getc")
 readline.have_func("rl_getc_function")
 readline.have_func("rl_filename_completion_function")
