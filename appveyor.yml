@@ -2,6 +2,8 @@ init:
   - SET PATH=C:/Ruby%ruby_version%/bin;%PATH%
   - SET RAKEOPT=-rdevkit
 install:
+  - echo %READLINE_REPO%
+  - IF "%READLINE_REPO%" EQU "ri2" ( C:/msys64/usr/bin/bash --login %APPVEYOR_BUILD_FOLDER%/install_libreadline.sh )
   - ps: |
       if ($env:ruby_version -like "*head*") {
         $(new-object net.webclient).DownloadFile("https://github.com/oneclick/rubyinstaller2/releases/download/rubyinstaller-head/rubyinstaller-$env:ruby_version.exe", "$pwd/ruby-setup.exe")
@@ -14,10 +16,24 @@ install:
 build_script:
   - bundle exec rake compile
 test_script:
-  - chcp 65001
+  - chcp %CODEPAGE%
   - bundle exec rake test
 environment:
   matrix:
-    - ruby_version: "head-x64"
     - ruby_version: "24"
-    - ruby_version: "24-x64"
+      MINGW_PACKAGE_PREFIX: "mingw-w64-i686"
+      CODEPAGE: 65001
+      READLINE_REPO: ri2
+
+    - ruby_version: "head-x64"
+      MINGW_PACKAGE_PREFIX: "mingw-w64-x86_64"
+      CODEPAGE: 850
+      READLINE_REPO: ri2
+
+    - ruby_version: "head-x64"
+      MINGW_PACKAGE_PREFIX: "mingw-w64-x86_64"
+      CODEPAGE: 850
+
+    - ruby_version: "24"
+      MINGW_PACKAGE_PREFIX: "mingw-w64-i686"
+      CODEPAGE: 65001
