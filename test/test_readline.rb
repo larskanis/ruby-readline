@@ -94,7 +94,7 @@ class TestReadline < Test::Unit::TestCase
         assert_equal("first second", actual_line_buffer)
         assert_equal(12, actual_point)
         assert_equal("first complete  finish", Readline.line_buffer)
-        assert_equal(Encoding.find("locale"), Readline.line_buffer.encoding)
+        assert_equal(readline_encoding, Readline.line_buffer.encoding)
         assert_equal(true, Readline.line_buffer.tainted?)
         assert_equal(22, Readline.point)
 
@@ -111,7 +111,7 @@ class TestReadline < Test::Unit::TestCase
         assert_equal("first second", actual_line_buffer)
         assert_equal(12, actual_point)
         assert_equal("first complete finish", Readline.line_buffer)
-        assert_equal(Encoding.find("locale"), Readline.line_buffer.encoding)
+        assert_equal(readline_encoding, Readline.line_buffer.encoding)
         assert_equal(true, Readline.line_buffer.tainted?)
         assert_equal(21, Readline.point)
       end
@@ -231,7 +231,7 @@ class TestReadline < Test::Unit::TestCase
     append_character = Readline.completion_append_character
     Readline.completion_append_character = ""
     completion_case_fold = Readline.completion_case_fold
-    locale = Encoding.find("locale")
+    locale = readline_encoding
     if locale == Encoding::UTF_8
       enc1 = Encoding::EUC_JP
     else
@@ -429,7 +429,7 @@ class TestReadline < Test::Unit::TestCase
   end if !/EditLine/n.match(Readline::VERSION)
 
   def test_input_metachar_multibyte
-    unless Encoding.find("locale") == Encoding::UTF_8
+    unless readline_encoding == Encoding::UTF_8
       return if assert_under_utf8
       skip 'this test needs UTF-8 locale'
     end
@@ -517,7 +517,7 @@ class TestReadline < Test::Unit::TestCase
     saved_completer_quote_characters = Readline.completer_quote_characters
     saved_completer_word_break_characters = Readline.completer_word_break_characters
     return unless Readline.respond_to?(:quoting_detection_proc=)
-    unless Encoding.find("locale") == Encoding::UTF_8
+    unless readline_encoding == Encoding::UTF_8
       return if assert_under_utf8
       skip 'this test needs UTF-8 locale'
     end
@@ -607,7 +607,7 @@ class TestReadline < Test::Unit::TestCase
   end
 
   def get_default_internal_encoding
-    return Encoding.default_internal || Encoding.find("locale")
+    return Encoding.default_internal || readline_encoding
   end
 
   def assert_under_utf8
@@ -615,10 +615,10 @@ class TestReadline < Test::Unit::TestCase
   end
 
   def readline_encoding
-    if /mswin|bccwin|mingw/ !~ RUBY_PLATFORM
-      'UTF-8'
+    if /mswin|bccwin|mingw/ =~ RUBY_PLATFORM
+      Encoding::UTF_8
     else
-      'locale'
+      Encoding.find('locale')
     end
   end
 end if defined?(::Readline)
