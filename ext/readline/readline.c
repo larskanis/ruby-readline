@@ -136,8 +136,9 @@ static VALUE readline_outstream;
 static FILE *readline_rl_instream;
 static FILE *readline_rl_outstream;
 
-/* Set to 1 in prepare_readline() if readline can use UTF-8 instead
- * of locale character encoding.
+/* This is enabled in prepare_readline() if inputs and outputs to the
+ * readline API are encoded as UTF-8. Otherwise they are encoded with
+ * local console OEM character encoding.
  */
 static int readline_use_utf8 = 0;
 
@@ -411,6 +412,7 @@ prepare_readline(void)
 	rl_initialize();
 
 #ifdef HAVE_RL_UTF8_API
+        /* Prefer UTF-8 over console OEM codepage encoding */
         readline_use_utf8 = rl_utf8_api(1);
 #endif
 	initialized = 1;
@@ -1693,6 +1695,30 @@ readline_s_refresh_line(VALUE self)
 #define readline_s_refresh_line rb_f_notimplement
 #endif
 
+#if defined(HAVE_RL_UTF8_API)
+/*
+ * call-seq:
+ *   Readline.utf8_api -> self
+ *
+ * Set or query the API character encoding.
+ *
+ * See GNU Readline's rl_utf8_api function.
+ *
+ * Raises NotImplementedError if the using readline library does not support.
+ */
+static VALUE
+readline_s_utf8_api(int argc, VALUE *argv, VALUE self)
+{
+    VALUE enable;
+    if (rb_scan_args(argc, argv, "01", &enable) == 0) {
+        enable = INT2NUM(-1);
+    }
+    return INT2NUM(rl_utf8_api(NUM2INT(enable)));
+}
+#else
+#define readline_s_utf8_api rb_f_notimplement
+#endif
+
 static VALUE
 hist_to_s(VALUE self)
 {
@@ -2031,6 +2057,10 @@ Init_readline(void)
                                readline_s_set_special_prefixes, 1);
     rb_define_singleton_method(mReadline, "special_prefixes",
                                readline_s_get_special_prefixes, 0);
+#if defined HAVE_RL_UTF8_API
+    rb_define_singleton_method(mReadline, "utf8_api",
+                               readline_s_utf8_api, -1);
+#endif
 
 #if USE_INSERT_IGNORE_ESCAPE
     CONST_ID(id_orig_prompt, "orig_prompt");

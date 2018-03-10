@@ -554,6 +554,15 @@ class TestReadline < Test::Unit::TestCase
     Readline.completer_word_break_characters = saved_completer_word_break_characters
   end
 
+  def test_utf8_api
+    return unless Readline.respond_to?(:utf8_api)
+    assert_equal 1, Readline.utf8_api, "Should default to UTF-8"
+    assert_equal 0, Readline.utf8_api(0)
+    assert_equal 0, Readline.utf8_api
+    assert_equal 1, Readline.utf8_api(1)
+    assert_equal 1, Readline.utf8_api
+  end
+
   private
 
   def replace_stdio(stdin_path, stdout_path)
@@ -615,10 +624,7 @@ class TestReadline < Test::Unit::TestCase
   end
 
   def readline_encoding
-    if /mswin|bccwin|mingw/ =~ RUBY_PLATFORM
-      Encoding::UTF_8
-    else
-      Encoding.find('locale')
-    end
+    return Encoding.find('locale') unless Readline.respond_to?(:utf8_api)
+    Readline.utf8_api == 0 ? Encoding.find('locale') : Encoding::UTF_8
   end
 end if defined?(::Readline)
